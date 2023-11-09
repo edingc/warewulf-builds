@@ -1,0 +1,25 @@
+FROM rockylinux:8
+
+RUN groupadd -r rpmbuilder && \
+    useradd -g rpmbuilder -c "Docker RPM build user" rpmbuilder
+
+RUN dnf -y upgrade \
+    && dnf -y install dnf-plugins-core \
+    && dnf config-manager --set-enabled powertools \
+    && dnf install -y epel-release \
+    && dnf -y install \
+    firewalld-filesystem \
+    git \
+    golang \
+    gpgme-devel \
+    libassuan-devel \
+    make \
+    rpmlint \
+    rpmdevtools \
+    systemd \
+    sudo \
+    wget \
+    && dnf clean all
+
+COPY build.sh . 
+ENTRYPOINT ./build.sh

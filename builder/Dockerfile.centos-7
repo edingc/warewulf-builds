@@ -1,0 +1,25 @@
+FROM centos:centos7
+
+RUN yum -y install epel-release \
+	centos-release-scl
+
+RUN yum -y upgrade && \
+  yum -y install \
+  firewalld-filesystem \
+  git \
+  golang \
+  gpgme-devel \
+  libassuan-devel \
+  make \
+  rpmlint \
+  rpmdevtools \
+  systemd \
+  sudo \
+  wget \
+  && yum clean all
+
+RUN groupadd -r rpmbuilder && \
+    useradd -g rpmbuilder -c "Docker RPM build user" rpmbuilder
+
+COPY build.sh .
+ENTRYPOINT ./build.sh 
