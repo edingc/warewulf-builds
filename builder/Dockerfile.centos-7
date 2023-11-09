@@ -1,5 +1,8 @@
 FROM centos:centos7
 
+RUN groupadd -r rpmbuilder && \
+    useradd -g rpmbuilder -c "Docker RPM build user" rpmbuilder
+
 RUN yum -y install epel-release \
 	centos-release-scl
 
@@ -17,9 +20,6 @@ RUN yum -y upgrade && \
   sudo \
   wget \
   && yum clean all
-
-RUN groupadd -r rpmbuilder && \
-    useradd -g rpmbuilder -c "Docker RPM build user" rpmbuilder
 
 COPY build.sh .
 ENTRYPOINT ./build.sh 
